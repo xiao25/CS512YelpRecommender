@@ -184,7 +184,7 @@ def load_business_id():
     business_id = []
     f = open("Business2Index.txt", "r")
     for line in f.readlines():
-        business_id.append(line)
+        business_id.append(line[:-1])
     f.close()
     return business_id
     
@@ -192,7 +192,7 @@ def load_user_id():
     user_id = []
     f = open("User2Index.txt", "r")
     for line in f.readlines():
-        user_id.append(line)
+        user_id.append(line[:-1])
     f.close()
     return user_id
     
