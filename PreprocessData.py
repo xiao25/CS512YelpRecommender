@@ -50,15 +50,15 @@ def buildUBMatrix(filename,business_dict):
             if userid in UB_dict and businessid in UB_dict[userid]:
                 UB_Matrix[row][col] = UB_dict[userid][businessid]
 
-    return UB_Matrix
+    return (user_lst,business_lst,UB_Matrix)
 
 
-def buildBBMatrix(business_dict):
+def buildBBMatrix(business_dict,business_lst):
     '''
     To compute the geo-distance between two gps coordinates, there are many options according to http://www.movable-type.co.uk/scripts/latlong.html
     Consider performance, I choose Equirectangular approximation formula here; Unit is km
     '''
-    business_lst = business_dict.keys()
+
     N = len(business_lst)
     BB_Matrix = np.zeros((N,N),dtype='float16')
 
@@ -84,10 +84,13 @@ def buildBBMatrix(business_dict):
 def main():
     # my code here
     business_dict = readBusinessata('/Users/ztx/Downloads/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_business.json')
-    UB = buildUBMatrix('/Users/ztx/Downloads/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_review.json',business_dict)
-    BB = buildBBMatrix(business_dict)
+    (user_lst,business_lst,UB) = buildUBMatrix('/Users/ztx/Downloads/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_review.json',business_dict)
+    BB = buildBBMatrix(business_dict,business_lst)
     writeMatrix2File(UB,'UB.txt','%d')
     writeMatrix2File(BB,'BB.txt','%.4f')
+    writeMatrix2File(user_lst,'User2Index.txt','%s')
+    writeMatrix2File(business_lst,'Business2Index.txt','%s')
+
 
 
 
