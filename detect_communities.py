@@ -21,9 +21,6 @@ def detect_communities(business_business_rbf, user_business_rc,
         print("Running assignment iteration " + str(assignment_iteration) + "...")
         compute_ranks(business_cluster_rank, business_cluster_hard, user_cluster_rank, 
             business_business_rbf, user_business_rc, business_business_propagation_weight, num_ranking_iterations)
-        #f = open("temp.txt", "w")
-        #f.write("\n".join([" ".join([str(item) for item in row]) for row in business_cluster_rank]))
-        #f.close()
         compute_assignment(business_cluster_rank, cluster_weights, business_cluster_soft, business_cluster_hard)
         compute_user_cluster_soft(business_cluster_soft, user_business_rc, user_cluster_soft)
         
@@ -183,17 +180,43 @@ def load_user_business_rc():
     f.close()
     return user_business_rc
     
-def write_business_cluster_hard(business_cluster_hard):
+def load_business_id():
+    business_id = []
+    f = open("Business2Index.txt", "r")
+    for line in f.readlines():
+        business_id.append(line)
+    f.close()
+    return business_id
+    
+def load_user_id():
+    user_id = []
+    f = open("User2Index.txt", "r")
+    for line in f.readlines():
+        user_id.append(line)
+    f.close()
+    return user_id
+    
+def write_business_cluster_hard(business_cluster_hard, business_id):
     f = open("business_cluster_hard.txt", "w")
     for business in xrange(len(business_cluster_hard)):
+        yelp_id = business_id[business]
         cluster = business_cluster_hard[business]
-        f.write(str(cluster) + "\n")
+        f.write(yelp_id + " " + str(cluster) + "\n")
     f.close()
     
-def write_user_cluster_soft(user_cluster_soft):
+def write_user_cluster_soft(user_cluster_soft, user_id):
     f = open("user_cluster_soft.txt", "w")
     for user in xrange(len(user_cluster_soft)):
-        f.write(" ".join([str(weight) for weight in user_cluster_soft[user]]) + "\n")
+        yelp_id = user_id[user]
+        f.write(yelp_id)
+        for weight in user_cluster_soft[user]:
+            f.write(" " + str(weight))
+        f.write("\n")
+    f.close()
+    
+def write_matrix(matrix):
+    f = open("temp.txt", "w")
+    f.write("\n".join([" ".join([str(item) for item in row]) for row in matrix]))
     f.close()
     
 if __name__ == "__main__":
@@ -202,8 +225,10 @@ if __name__ == "__main__":
     
     num_clusters = 10
     
-    (business_cluster_hard, user_cluster_soft) = detect_communities(business_business_rbf, user_business_rc, num_clusters, 0.6, 1, 20)
+    (business_cluster_hard, user_cluster_soft) = detect_communities(business_business_rbf, user_business_rc, num_clusters, 0.6, 20, 20)
     
-    write_business_cluster_hard(business_cluster_hard)
-    write_user_cluster_soft(user_cluster_soft)
+    business_id = load_business_id()
+    write_business_cluster_hard(business_cluster_hard, business_id)
+    user_id = load_user_id()
+    write_user_cluster_soft(user_cluster_soft, user_id)
     
