@@ -33,8 +33,6 @@ def compute_ranks(business_cluster_rank, business_cluster_hard, user_cluster_ran
     num_clusters = len(business_cluster_rank[0])
     
     for iteration in xrange(num_iterations):
-        print("Running ranking iteration " + str(iteration) + "...")
-        
         cluster_sums = [0.0 for cluster in xrange(num_clusters)]
         
         for user in xrange(num_users):
@@ -223,9 +221,9 @@ if __name__ == "__main__":
     business_business_rbf = load_business_business_rbf(500.0, lambda distance: 200.0 / (distance + 1.0)) # + 1.0 to deal with 0 distance problem
     user_business_rc = load_user_business_rc()
     
-    num_clusters = 10
+    num_clusters = 20
     
-    (business_cluster_hard, user_cluster_soft) = detect_communities(business_business_rbf, user_business_rc, num_clusters, 0.6, 20, 20)
+    (business_cluster_hard, user_cluster_soft) = detect_communities(business_business_rbf, user_business_rc, num_clusters, 0.6, 50, 20)
     
     business_id = load_business_id()
     write_business_cluster_hard(business_cluster_hard, business_id)
