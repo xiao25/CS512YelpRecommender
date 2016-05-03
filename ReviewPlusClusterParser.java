@@ -3,54 +3,33 @@ import java.io.*;
 
 public class ReviewPlusClusterParser {
 	public static void main(String[] args) {
-		reviewOnUser();
-		reviewOnBusiness();
+		// reviewOnUser();
+		// reviewOnBusiness();
+		ReviewWithTwoClusters();
 	}
 
-	public static void reviewOnUser() {
-		HashMap<String, String> map = getUserCluster();
-		String line = "";
-
-		try {
-			String fileName = "/Users/haowang/Desktop/CS512YelpRecommender/Review_in_Urbana_User_Business.txt";
-			BufferedReader reader = new BufferedReader(new FileReader(fileName));
-
-			BufferedWriter bw = new BufferedWriter(new FileWriter("ReviewOnUser.txt"));
-
-			while ((line = reader.readLine()) != null) {
-				String[] strs = line.split("\t");
-				String user_id = strs[0];
-				String cluster = map.get(user_id);
-
-				bw.write(user_id + "\t" + strs[1] + "\t" + strs[2] + "\t" + cluster);
-				bw.newLine();
-			}
-
-			reader.close();
-			bw.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void reviewOnBusiness() {
-		HashMap<String, String> map = getBusinessCluster();
+	//Each line of the generated txt file is: "business_id	user_id	  rating   business_cluster  user_cluster"
+	public static void ReviewWithTwoClusters() {
+		HashMap<String, String> businessCluster = getBusinessCluster();
+		HashMap<String, String> userCluster = getUserCluster();
 		String line = "";
 
 		try {
 			String fileName = "/Users/haowang/Desktop/CS512YelpRecommender/Review_in_Urbana_Business_User.txt";
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 
-			BufferedWriter bw = new BufferedWriter(new FileWriter("ReviewOnBusiness.txt"));
+			BufferedWriter bw = new BufferedWriter(new FileWriter("ReviewWithTwoClusters.txt"));
 
 			while ((line = reader.readLine()) != null) {
 				String[] strs = line.split("\t");
 				String business_id = strs[0];
-				String cluster = map.get(business_id);
+				String user_id = strs[1];
+				String rating = strs[2];
 
-				bw.write(business_id + "\t" + strs[1] + "\t" + strs[2] + "\t" + cluster);
+				String b_cluster = businessCluster.get(business_id);
+				String u_cluster = userCluster.get(user_id);
+
+				bw.write(business_id + "\t" + user_id + "\t" + rating + "\t" + b_cluster + "\t" + u_cluster);
 				bw.newLine();
 			}
 
@@ -60,8 +39,63 @@ public class ReviewPlusClusterParser {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
+
+	// public static void reviewOnUser() {
+	// 	HashMap<String, String> map = getUserCluster();
+	// 	String line = "";
+
+	// 	try {
+	// 		String fileName = "/Users/haowang/Desktop/CS512YelpRecommender/Review_in_Urbana_User_Business.txt";
+	// 		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+
+	// 		BufferedWriter bw = new BufferedWriter(new FileWriter("ReviewOnUser.txt"));
+
+	// 		while ((line = reader.readLine()) != null) {
+	// 			String[] strs = line.split("\t");
+	// 			String user_id = strs[0];
+	// 			String cluster = map.get(user_id);
+
+	// 			bw.write(user_id + "\t" + strs[1] + "\t" + strs[2] + "\t" + cluster);
+	// 			bw.newLine();
+	// 		}
+
+	// 		reader.close();
+	// 		bw.close();
+
+	// 	} catch (Exception e) {
+	// 		e.printStackTrace();
+	// 	}
+
+	// }
+
+	// public static void reviewOnBusiness() {
+	// 	HashMap<String, String> map = getBusinessCluster();
+	// 	String line = "";
+
+	// 	try {
+	// 		String fileName = "/Users/haowang/Desktop/CS512YelpRecommender/Review_in_Urbana_Business_User.txt";
+	// 		BufferedReader reader = new BufferedReader(new FileReader(fileName));
+
+	// 		BufferedWriter bw = new BufferedWriter(new FileWriter("ReviewOnBusiness.txt"));
+
+	// 		while ((line = reader.readLine()) != null) {
+	// 			String[] strs = line.split("\t");
+	// 			String business_id = strs[0];
+	// 			String cluster = map.get(business_id);
+
+	// 			bw.write(business_id + "\t" + strs[1] + "\t" + strs[2] + "\t" + cluster);
+	// 			bw.newLine();
+	// 		}
+
+	// 		reader.close();
+	// 		bw.close();
+
+	// 	} catch (Exception e) {
+	// 		e.printStackTrace();
+	// 	}
+
+	// }
 
 	public static HashMap<String, String> getBusinessCluster() {
 		HashMap<String, String> map = new HashMap<>();
