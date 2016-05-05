@@ -94,10 +94,11 @@ def compute_assignment(business_cluster_rank, cluster_weights, business_cluster_
     for business in xrange(num_businesses):
         sum = 0.0
         for cluster in xrange(num_clusters):
-            business_cluster_soft[business][cluster] = business_cluster_rank[business][cluster] # * cluster_weights[cluster]
+            business_cluster_soft[business][cluster] = business_cluster_rank[business][cluster] * cluster_weights[cluster]
             sum += business_cluster_soft[business][cluster]
         for cluster in xrange(num_clusters):
-            business_cluster_soft[business][cluster] /= sum
+            if sum > 0.0:
+                business_cluster_soft[business][cluster] /= sum
                 
     for cluster in xrange(num_clusters):
         cluster_weight = 0.0
@@ -244,7 +245,7 @@ def write_matrix(matrix):
     f.close()
     
 if __name__ == "__main__":
-    business_business_rbf = load_business_business_rbf(1000000.0, 20.0, lambda distance: (200.0 / (distance + 1.0)) ** 2.0) # + 1.0 to deal with 0.0 input
+    business_business_rbf = load_business_business_rbf(500.0, 20.0, lambda distance: (200.0 / (distance + 1.0))) # + 1.0 to deal with 0.0 input
     user_business_rc = load_user_business_rc()
     
     num_clusters = 10
@@ -252,7 +253,7 @@ if __name__ == "__main__":
     business_id = load_business_id()
     initial_business_cluster_hard = load_initial_business_cluster_hard(business_id, len(business_business_rbf))
     
-    (business_cluster_hard, user_cluster_soft) = detect_communities(business_business_rbf, user_business_rc, initial_business_cluster_hard, num_clusters, 0, 20)
+    (business_cluster_hard, user_cluster_soft) = detect_communities(business_business_rbf, user_business_rc, initial_business_cluster_hard, num_clusters, 30, 20)
     
     write_business_cluster_hard(business_cluster_hard, business_id)
     user_id = load_user_id()

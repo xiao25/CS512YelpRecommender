@@ -69,7 +69,7 @@ def main():
     cluster_label2 = DBSCAN(min_samples=min_samples).fit_predict(mat)
     cluster_label2 = buildLabels2(cluster_label2,X)
 
-    np.savetxt('Keans.txt', cluster_label0, fmt='%s', newline='\n', header='', footer='', comments='# ')
+    np.savetxt('KMeans.txt', cluster_label0, fmt='%s', newline='\n', header='', footer='', comments='# ')
     np.savetxt('SpectralClustering.txt', cluster_label1, fmt='%s', newline='\n', header='', footer='', comments='# ')
     np.savetxt('DBSCAN.txt', cluster_label2, fmt='%s', newline='\n', header='', footer='', comments='# ')
 
