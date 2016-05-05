@@ -84,19 +84,21 @@ public class BusinessCategoryLocalUserVisited {
 		return businessVisited;
 	}
 
-	public static HashMap<String, Integer> getLocalBusinessCategory(int cluster) {
+	public static HashMap<String, Double> getLocalBusinessCategory(int cluster) {
 		/**
 		 * need to use a hashmap to store the category scores in local cluster
 		 * Key: the category locally, Value : its score
 		 */
 
-		HashMap<String, Integer> localCategory = new HashMap<>();
+		HashMap<String, Double> localCategory = new HashMap<>();
 		HashMap<String, Set<String>> businessCategories = getBusinessCategoriesInUrbana();
 
 		String line = "";
 
 		try {
 			String fileName = "/Users/haowang/Desktop/CS512YelpRecommender/ReviewOnBusiness.txt";
+			// String fileName = "/Users/haowang/Desktop/CS512YelpRecommender/ReviewWithTwoClusters.txt";
+
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 
 			while ((line = reader.readLine()) != null) {
@@ -104,19 +106,22 @@ public class BusinessCategoryLocalUserVisited {
 				String businessId = strs[0];
 				int rating = Integer.parseInt(strs[2]);
 
+				// double normRating = rating * Double.parseDouble(strs[4].split(",")[cluster]);
+
 				Set<String> categories = businessCategories.get(businessId);
 
 				if(Integer.parseInt(strs[3]) == cluster) {
 					if(!categories.isEmpty()){
 						for(String category: categories) {
 							if(!localCategory.containsKey(category)) {
-								localCategory.put(category, 0);
+								localCategory.put(category, 0.0);
 							} else {
 								localCategory.put(category, localCategory.get(category) + rating);
 							}
 						}
 					}
 				}
+
 			}
 
 			reader.close();
@@ -150,7 +155,8 @@ public class BusinessCategoryLocalUserVisited {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getAllBusinessListsVisistedByLocalPeople(0));
-		System.out.println(getLocalBusinessCategory(0));
+		System.out.println(getAllBusinessListsVisistedByLocalPeople(1));
+		System.out.println(getLocalBusinessCategory(1));
+		// System.out.println(getAllLocalBusinessLists(1));
 	}
 }

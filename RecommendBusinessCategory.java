@@ -10,7 +10,8 @@ public class RecommendBusinessCategory {
 		//This is the lists of TOP 10 new business categories recommended for each cluster
 		for(int i = 0; i < CLUSTERS; i++) {
 			List<String> recommendedBusiness = recommendBusiness(i);
-			System.out.println(recommendedBusiness);
+			System.out.println("Top 10 recommended business for cluster " + i + " are:\n" + recommendedBusiness);
+			System.out.println();
 		}
 	}
 
@@ -27,7 +28,7 @@ public class RecommendBusinessCategory {
 		//System.out.println(visitedLists);
 
 		//this is the list of all the local business categories ranked by their overall ratings
-		HashMap<String, Integer> localCategory = BusinessCategoryLocalUserVisited.getLocalBusinessCategory(cluster);
+		HashMap<String, Double> localCategory = BusinessCategoryLocalUserVisited.getLocalBusinessCategory(cluster);
 		//System.out.println(localCategory);
 
 		List<String> results = new ArrayList<>();
