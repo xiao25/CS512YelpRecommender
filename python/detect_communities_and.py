@@ -161,7 +161,7 @@ def compute_user_cluster_soft(business_cluster_soft, user_business_rc, user_clus
 
 def load_business_business_rbf(max_threshold, min_threshold, rbf):
     business_business_rbf = []
-    f = open("BB.txt", "r")
+    f = open("../resources/BB.txt", "r")
     business = 0
     for line in f.readlines():
         business_rbf = {}
@@ -181,7 +181,7 @@ def load_business_business_rbf(max_threshold, min_threshold, rbf):
     
 def load_user_business_rc():
     user_business_rc = []
-    f = open("UB.txt", "r")
+    f = open("../resources/UB.txt", "r")
     for line in f.readlines():
         business_rc = {}
         business = 0
@@ -196,7 +196,7 @@ def load_user_business_rc():
     
 def load_business_id():
     business_id = []
-    f = open("Business2Index.txt", "r")
+    f = open("../resources/Business2Index.txt", "r")
     for line in f.readlines():
         business_id.append(line[:-1])
     f.close()
@@ -204,7 +204,7 @@ def load_business_id():
     
 def load_user_id():
     user_id = []
-    f = open("User2Index.txt", "r")
+    f = open("../resources/User2Index.txt", "r")
     for line in f.readlines():
         user_id.append(line[:-1])
     f.close()
@@ -212,7 +212,7 @@ def load_user_id():
     
 def load_initial_business_cluster_hard(business_id, num_businesses):
     business_cluster_hard_map = {}
-    f = open("Keans.txt", "r")
+    f = open("../resources/KMeans.txt", "r")
     for line in f.readlines():
         info = line.split()
         yelp_id = info[0]
@@ -222,7 +222,7 @@ def load_initial_business_cluster_hard(business_id, num_businesses):
     return [business_cluster_hard_map[business_id[business]] for business in xrange(num_businesses)]
     
 def write_business_cluster_hard(business_cluster_hard, business_id):
-    f = open("business_cluster_hard.txt", "w")
+    f = open("../resources/business_cluster_hard.txt", "w")
     for business in xrange(len(business_cluster_hard)):
         yelp_id = business_id[business]
         cluster = business_cluster_hard[business]
@@ -230,7 +230,7 @@ def write_business_cluster_hard(business_cluster_hard, business_id):
     f.close()
     
 def write_user_cluster_soft(user_cluster_soft, user_id):
-    f = open("user_cluster_soft.txt", "w")
+    f = open("../resources/user_cluster_soft.txt", "w")
     for user in xrange(len(user_cluster_soft)):
         yelp_id = user_id[user]
         f.write(yelp_id)
@@ -240,7 +240,7 @@ def write_user_cluster_soft(user_cluster_soft, user_id):
     f.close()
     
 def write_matrix(matrix):
-    f = open("temp.txt", "w")
+    f = open("../resources/temp.txt", "w")
     f.write("\n".join([" ".join([str(item) for item in row]) for row in matrix]))
     f.close()
     
