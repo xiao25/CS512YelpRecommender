@@ -1,5 +1,5 @@
 id_cluster = {}
-f = open("business_cluster_hard.txt", "r")
+f = open("../resources/business_cluster_hards.txt", "r")
 for line in f.readlines():
     info = line.split()
     yelp_id = info[0]
@@ -8,7 +8,7 @@ for line in f.readlines():
 f.close()
 
 id_info = []
-f = open("ID2Point.txt", "r")
+f = open("../resources/ID2Point.txt", "r")
 for line in f.readlines():
     info = line.split()
     yelp_id = info[0]
@@ -18,7 +18,7 @@ for line in f.readlines():
     id_info.append((yelp_id, longitude, latitude, cluster))
 f.close()
 
-f = open("pinpoint_table.csv", "w")
+f = open("../resources/pinpoint_table.csv", "w")
 f.write("Name,Cluster,Latitude,Longitude\n")
 for (yelp_id, longitude, latitude, cluster) in id_info:
     if cluster >= 0 and cluster < 7: # it seems that the found website can only display 7 colors...
