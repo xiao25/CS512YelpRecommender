@@ -80,16 +80,36 @@ def buildBBMatrix(business_dict,business_lst):
 
     return BB_Matrix
 
+def buildUUMatrix(filename,user_lst):
+    M = len(user_lst)
+    UU_Matrix = np.zeros((M,M),dtype='int32')
+    user_dict = {user_lst[indice]:indice for indice in xrange(M) }
+
+    with open(filename,'r') as finput:
+        for line in finput:
+            object = json.loads(line)
+            id = object['user_id']
+            if id in user_dict:
+                row = user_dict[id]
+                for friend_id in object['friends']:
+                    if friend_id in user_dict:
+                        col = user_dict[friend_id]
+                        UU_Matrix[row][col] = 1
+
+    return UU_Matrix
 
 def main():
     # my code here
     business_dict = readBusinessata('/Users/ztx/Downloads/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_business.json')
     (user_lst,business_lst,UB) = buildUBMatrix('/Users/ztx/Downloads/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_review.json',business_dict)
+    UU = buildUUMatrix('/Users/ztx/Downloads/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_user.json',user_lst)
+
     BB = buildBBMatrix(business_dict,business_lst)
-    writeMatrix2File(UB,'UB.txt','%d')
-    writeMatrix2File(BB,'BB.txt','%.4f')
-    writeMatrix2File(user_lst,'User2Index.txt','%s')
-    writeMatrix2File(business_lst,'Business2Index.txt','%s')
+    writeMatrix2File(UB,'../resources/UB.txt','%d')
+    writeMatrix2File(BB,'../resources/BB.txt','%.4f')
+    writeMatrix2File(UU,'../resources/UU.txt','%d')
+    writeMatrix2File(user_lst,'../resources/User2Index.txt','%s')
+    writeMatrix2File(business_lst,'../resources/Business2Index.txt','%s')
 
 
 
