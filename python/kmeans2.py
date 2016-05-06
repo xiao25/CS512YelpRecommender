@@ -100,7 +100,34 @@ class KMeans:
 
         return Point(centroid_coords)
 
-def kmeans(points, k, cutoff,threshold):
+
+def reduce(clusters,threshold_strict,iterations):
+    converage_flag1 = False
+    loop_iteration = 0
+    clusters_new = []
+    while (loop_iteration <= iterations) and (not converage_flag1):
+        converage_flag2 = False
+        for cluster in clusters:
+            for another in clusters:
+                dist = getDistance(cluster.centroid, another.centroid)
+                if cluster != another and  dist < threshold_strict:
+                    pts = cluster.points + another.points
+                    cluster_new = KMeans(pts)
+                    clusters.remove(cluster)
+                    clusters.remove(another)
+                    clusters.append(cluster_new)
+                    converage_flag2 = True
+                    break
+
+
+        if not converage_flag2:
+            converage_flag1 = True
+        loop_iteration += 1
+
+
+def kmeans2(points, cutoff,threshold,reduce_threshold):
+
+    k = 1
 
     # Pick out k random points to use as our initial centroids
     initial = random.sample(points, k)
@@ -160,7 +187,10 @@ def kmeans(points, k, cutoff,threshold):
             print "Converged after %s iterations" % loopCounter
             break
 
-    print(clusterCount)
+
+
+    reduce(clusters,reduce_threshold,10)
+    print(len(clusters))
     return clusters
 
 def getDistance(a, b):
