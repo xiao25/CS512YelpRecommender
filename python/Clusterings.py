@@ -4,9 +4,9 @@ from sklearn.cluster import DBSCAN
 from kmeans import kmeans
 from PreprocessData import readBusinessata
 from kmeans import Point
+from kmeans2 import kmeans2
 
-
-finput = open('Business2Index.txt','r')
+finput = open('../resources/Business2Index.txt','r')
 Business2Index = np.loadtxt(finput,dtype='str')
 
 def buildLabels(est,X):
@@ -49,7 +49,7 @@ def prepareX():
 
 
 def main():
-    finput = open('BB.txt','r')
+    finput = open('../resources/BB.txt','r')
     mat = np.loadtxt(finput,delimiter=' ',)
     finput.close()
 
@@ -58,22 +58,27 @@ def main():
     k = 10
     min_samples = 4
     opt_cutoff = 0.5
+    threshold = 500
+    reduce_threshold = 600
 
 
 
     est = kmeans(X,k,opt_cutoff)
+    est2 = kmeans2(X,opt_cutoff,threshold,reduce_threshold)
 
     (cluster_label0,id2point) = buildLabels(est,X)
+    (cluster_label01,id2point) = buildLabels(est2,X)
     cluster_label1 = SpectralClustering(k).fit_predict(mat)
     cluster_label1 = buildLabels2(cluster_label1,X)
     cluster_label2 = DBSCAN(min_samples=min_samples).fit_predict(mat)
     cluster_label2 = buildLabels2(cluster_label2,X)
 
-    np.savetxt('KMeans.txt', cluster_label0, fmt='%s', newline='\n', header='', footer='', comments='# ')
-    np.savetxt('SpectralClustering.txt', cluster_label1, fmt='%s', newline='\n', header='', footer='', comments='# ')
-    np.savetxt('DBSCAN.txt', cluster_label2, fmt='%s', newline='\n', header='', footer='', comments='# ')
+    np.savetxt('../resources/KMeans.txt', cluster_label0, fmt='%s', newline='\n', header='', footer='', comments='# ')
+    np.savetxt('../resources/KMeans2.txt', cluster_label01, fmt='%s', newline='\n', header='', footer='', comments='# ')
+    np.savetxt('../resources/SpectralClustering.txt', cluster_label1, fmt='%s', newline='\n', header='', footer='', comments='# ')
+    np.savetxt('../resources/DBSCAN.txt', cluster_label2, fmt='%s', newline='\n', header='', footer='', comments='# ')
 
-    np.savetxt('ID2Point.txt', id2point, fmt=["%s",]*3, newline='\n')
+    np.savetxt('../resources/ID2Point.txt', id2point, fmt=["%s",]*3, newline='\n')
 
 if __name__ == "__main__":
     main()

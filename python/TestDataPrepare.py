@@ -34,9 +34,32 @@ def findNewestBusiness(finput1,finput2,Business2Index):
 
 
 
-    business_lst = sorted(business_lst, key = itemgetter(1),reverse=True)
+    business_lst = sorted(business_lst, key = itemgetter(1),reverse=True)[:20]
+
+
 
     return business_lst[:20]
+
+def buildBusinessObj(business_lst,filename):
+    business_dict = {id:date for (id,date) in business_lst}
+
+    new_test_data = []
+    with open(filename,'r') as finput:
+        for line in finput:
+            object = json.loads(line)
+            id = object['business_id']
+            if id in business_dict:
+                new_obj = {}
+                new_obj['name'] = object['name']
+                new_obj['categories'] = object['categories']
+                new_obj['date'] = str(business_dict[id])
+                new_obj['id'] = id
+                new_test_data.append(new_obj)
+
+            if len(new_test_data) == 20:
+                break
+
+    return new_test_data
 
 
 
@@ -53,7 +76,14 @@ def main():
 
 
     test_data = findNewestBusiness(finput1,finput2,Business2Index)
-    np.savetxt('../resources/TestBusiness.txt', test_data, fmt='%s', newline='\n')
+    filename = '/Users/ztx/Downloads/yelp_dataset_challenge_academic_dataset/yelp_academic_dataset_business.json'
+    test_data = buildBusinessObj(test_data,filename)
+
+    with open('../resources/TestBusiness.json', 'w') as outfile:
+        json.dump(test_data, outfile,indent=4, separators=(',', ': '))
+
+
+
 
 
 if __name__ == "__main__":
