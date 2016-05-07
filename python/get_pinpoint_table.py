@@ -18,9 +18,9 @@ for line in f.readlines():
     id_info.append((yelp_id, longitude, latitude, cluster))
 f.close()
 
-f = open("../resources/kmeans2.csv", "w")
-f.write("Name,Cluster,Latitude,Longitude\n")
+output_filename = "../resources/clustered_businesses.txt"
+
+f = open(output_filename, "w")
 for (yelp_id, longitude, latitude, cluster) in id_info:
-    if cluster in [15,39,36,23,17,13,42,]: # it seems that the found website can only display 7 colors...
-        f.write(yelp_id + "," + str(cluster) + "," + str(latitude) + "," + str(longitude) + "\n")
+    f.write(yelp_id + "," + str(latitude) + "," + str(longitude) + "," + str(cluster) + "\n")
 f.close()
