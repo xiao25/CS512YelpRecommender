@@ -2,8 +2,8 @@ import java.util.*;
 import java.io.*;
 
 public class RecommendBusinessCategory_1 {
-	private static final int MAX_RECOMMENDED_BUSINESS = 10;
-	private static final double THRESHOLD = 0.4;
+	// private static final int MAX_RECOMMENDED_BUSINESS = 10;
+	private static final double THRESHOLD = 0.75;
 	private static final int CLUSTERS = 10;
 
 	public static void main(String[] args) {
@@ -24,11 +24,11 @@ public class RecommendBusinessCategory_1 {
 		 */
 
 		//this is the list of all the business categories local users visited ranked by their overall ratings
-		List<BusinessRatings> visitedLists = BusinessCategoryLocalUserVisited.getAllBusinessListsVisistedByLocalPeople(cluster);
+		List<BusinessRatings> visitedLists = Recommendation1_Helper.getAllBusinessListsVisistedByLocalPeople(cluster);
 		//System.out.println(visitedLists);
 
 		//this is the list of all the local business categories ranked by their overall ratings
-		HashMap<String, Double> localCategory = BusinessCategoryLocalUserVisited.getLocalBusinessCategory(cluster);
+		HashMap<String, Double> localCategory = Recommendation1_Helper.getLocalBusinessCategory(cluster);
 		//System.out.println(localCategory);
 
 		List<String> results = new ArrayList<>();
@@ -43,10 +43,10 @@ public class RecommendBusinessCategory_1 {
 			String category = business.category;
 			if(!localCategory.containsKey(category) || (localCategory.get(category) + 0.0) / business.rating < THRESHOLD) {
 				results.add(category);
-				count++;
-				if(count >= MAX_RECOMMENDED_BUSINESS) {
-					break;
-				}
+				// count++;
+				// if(count >= MAX_RECOMMENDED_BUSINESS) {
+				// 	break;
+				// }
 			}
 		}
 
