@@ -77,7 +77,8 @@ class Detector:
                 cluster_sums[cluster] += self.user_cluster_ranks[user][cluster]
         for user in xrange(self.num_users):
             for cluster in xrange(self.num_clusters):
-                self.user_cluster_ranks[user][cluster] /= cluster_sums[cluster]
+                if cluster_sums[cluster] > 0.0:
+                    self.user_cluster_ranks[user][cluster] /= cluster_sums[cluster]
                 
     def compute_business_ranks(self, limited_to_subgraph, combine_effects):
         temp_business_cluster_ranks_user = create_matrix(self.num_businesses, self.num_clusters, 0.0)
@@ -109,7 +110,8 @@ class Detector:
                 cluster_sums[cluster] += self.business_cluster_ranks[business][cluster]
         for business in xrange(self.num_businesses):
             for cluster in xrange(self.num_clusters):
-                self.business_cluster_ranks[business][cluster] /= cluster_sums[cluster]
+                if cluster_sums[cluster] > 0.0:
+                    self.business_cluster_ranks[business][cluster] /= cluster_sums[cluster]
         
     def compute_business_cluster_hards(self, use_uniform_cluster_weights, use_soft_directly):
         for business in xrange(self.num_businesses):
@@ -160,7 +162,9 @@ class Detector:
                     inner_product = 0.0
                     for attribute in xrange(self.num_clusters):
                         inner_product += self.business_cluster_softs[business][attribute] * cluster_centers[cluster][attribute]
-                    cosine = inner_product / cluster_center_lengths[cluster]
+                    cosine = 0.0
+                    if cluster_center_lengths[cluster] > 0.0:
+                        cosine = inner_product / cluster_center_lengths[cluster]
                     if cosine > max_cosine:
                         max_cluster = cluster
                         max_cosine = cosine
@@ -254,17 +258,17 @@ user_user_fs = load_relationships(resources_folder + "UU.txt", identity_function
 business_ids = load_ids(resources_folder + "Business2Index.txt")
 user_ids = load_ids(resources_folder + "User2Index.txt")
 
-num_clusters = 10
+num_clusters = 20
 
-initial_business_cluster_hards = load_initial_business_cluster_hards(resources_folder + "KMeans.txt", business_ids)
+# initial_business_cluster_hards = load_initial_business_cluster_hards(resources_folder + "KMeans2.txt", business_ids)
 
 detector = Detector(business_business_rbfs, user_business_rcs, user_user_fs, 
-    num_clusters, initial_business_cluster_hards)
+    num_clusters, None)
     
 num_assignment_iterations = 30
 num_ranking_iterations = 20
-combine_effects_user = lambda effect_user, effect_business: 0.3 * effect_user + 0.7 * effect_business
-combine_effects_business = lambda effect_user, effect_business: 1.0 * effect_user + 0.0 * effect_business
+combine_effects_user = lambda effect_user, effect_business: 0.2 * effect_user + 0.8 * effect_business
+combine_effects_business = lambda effect_user, effect_business: effect_user
 use_uniform_cluster_weights = False
 use_soft_directly = False
 
@@ -272,6 +276,6 @@ detector.detect(num_assignment_iterations, num_ranking_iterations,
     combine_effects_user, combine_effects_business, 
     use_uniform_cluster_weights, use_soft_directly)
     
-output_vector(resources_folder + "business_cluster_hards.txt", detector.business_cluster_hards, lambda index: business_ids[index])
-output_matrix(resources_folder + "user_cluster_softs.txt", detector.user_cluster_softs, lambda index: user_ids[index])
+output_vector(resources_folder + "clusters/business_cluster_hards_pure.txt", detector.business_cluster_hards, lambda index: business_ids[index])
+output_matrix(resources_folder + "clusters/user_cluster_softs_pure.txt", detector.user_cluster_softs, lambda index: user_ids[index])
     

@@ -1,5 +1,5 @@
 id_cluster = {}
-f = open("../resources/KMeans2.txt", "r")
+f = open("../resources/clusters/business_cluster_hards_mixed.txt", "r")
 for line in f.readlines():
     info = line.split()
     yelp_id = info[0]
